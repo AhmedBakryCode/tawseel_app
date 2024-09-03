@@ -12,6 +12,7 @@ import 'package:task/screens/menu_screens/attendance_screen.dart';
 import 'package:task/screens/menu_screens/exam_screen.dart';
 import 'package:task/screens/menu_screens/result_screen.dart';
 import 'package:task/screens/menu_screens/teachers_screen.dart';
+import 'package:task/screens/menu_screens/time_table.dart';
 import 'package:task/screens/register_page/sign_up_page.dart';
 
 import '../student/student_course_page.dart';
@@ -115,7 +116,7 @@ class _StudentLoginScreenState extends State<ParentLoginScreen> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ResultPage()),
+                        MaterialPageRoute(builder: (context) => ParentHomePage()),
                       );
                     },
                   ),

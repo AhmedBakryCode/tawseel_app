@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task/screens/chats/users_list_pge.dart';
+import 'package:task/screens/settings/settings_page.dart';
 
 import '../../components/default_appbar.dart';
 
@@ -13,8 +14,9 @@ class ParentHomePage extends StatelessWidget {
         onTap: (){
           Navigator.push(context, MaterialPageRoute(builder: (context)=>UsersListPage()));
         },
-        child: Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12),color: Color(0xFF182243)),
+        child: CircleAvatar(
+          radius: 20,
+          backgroundColor: Color(0xFF182243),
           child: Icon(Icons.chat_rounded, color: Colors.white,),
         ),
       ),
@@ -27,34 +29,38 @@ class ParentHomePage extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     backgroundColor: Color(0xff182243),
-                    radius: 10,
+                    radius: 30,
                     child: Image.asset("assets/user.png"),
                   ),
-                  Column(children: [
-                     Text(
-                      "Mohamed",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 20,
-                      ),
+                  SizedBox(width: 10),
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Mohamed",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 20,
+                          ),
+                        ),
+                        Text(
+                          "mohamed@gmail.com",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      "mohamed@gmail.com",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 10,
-                      ),
-                    ),]
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.settings, color: Colors.white),
-                  ),
+                  IconButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>SettingsPage()));}, icon: Icon(Icons.settings,color: Colors.white,size: 30,))
                 ],
               ),
             ),
+            SizedBox(height: 20,),
             Container(
               height: 180,
               child: PageView(
@@ -97,7 +103,17 @@ class ParentHomePage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20),
-
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                'Latest Noticies',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             // 4. ListView for cards
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -138,7 +154,7 @@ class ParentHomePage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset('assets/child_image.png', height: 50, width: 50),
+          Image.asset('assets/user.png', height: 50, width: 50),
           SizedBox(height: 10),
           Text(
             'Ahmed',

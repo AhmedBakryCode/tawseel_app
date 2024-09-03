@@ -6,6 +6,7 @@ class ResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int result =7;
     return Scaffold(
         body: SingleChildScrollView(
           child: Column(
@@ -21,7 +22,10 @@ class ResultPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20,),
-                ListView.builder(physics: NeverScrollableScrollPhysics(),itemBuilder: (context,index)=> ResultCardList())
+                ListView.builder(shrinkWrap: true,itemCount: 2,physics: NeverScrollableScrollPhysics(),itemBuilder: (context,index)=> ResultCardList())
+               ,SizedBox(height: 20,)
+                , Container(height: MediaQuery.of(context).size.height*0.1,width: MediaQuery.of(context).size.width*0.75,decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: result<=5? Colors.red: Colors.green),child: Center(child: Text(result<=5?"failed": "Passed",style: TextStyle(fontSize: 20,color: Colors.white),),),),
+SizedBox(height: 20,)
               ]),
         ));
   }}
