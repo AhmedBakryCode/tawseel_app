@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
+        scaffoldBackgroundColor: Color(0xFFF9F9F9), // Set the background color here
         // This is the theme of your application.
         //
         // TRY THIS: Try running your application with "flutter run". You'll see

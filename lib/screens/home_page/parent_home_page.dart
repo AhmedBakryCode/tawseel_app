@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:task/screens/chats/chat_screen.dart';
 import 'package:task/screens/chats/users_list_pge.dart';
 import 'package:task/screens/settings/settings_page.dart';
+import 'package:task/screens/student/student_course_page.dart';
 
 import '../../components/default_appbar.dart';
 
@@ -56,6 +58,7 @@ class ParentHomePage extends StatelessWidget {
                       ],
                     ),
                   ),
+                  Spacer(flex: 1,),
                   IconButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>SettingsPage()));}, icon: Icon(Icons.settings,color: Colors.white,size: 30,))
                 ],
               ),
@@ -74,20 +77,21 @@ class ParentHomePage extends StatelessWidget {
             SizedBox(height: 20),
 
             // 3. GridView for "MY Children"
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                'MY Children',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+            Align(alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'MY Children',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-            SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: GridView.builder(
                 physics: NeverScrollableScrollPhysics(), // Disable grid scrolling
                 shrinkWrap: true, // Wrap the grid to its content size
@@ -96,21 +100,23 @@ class ParentHomePage extends StatelessWidget {
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
-                itemCount: 2,
+                itemCount: 4,
                 itemBuilder: (context, index) {
-                  return _buildChildCard();
+                  return _buildChildCard(context);
                 },
               ),
             ),
             SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                'Latest Noticies',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+            Align(alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  'Latest Noticies',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -119,7 +125,7 @@ class ParentHomePage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 children: List.generate(4, (index) {
-                  return _buildListCard();
+                  return _buildListCard(context);
                 }),
               ),
             ),
@@ -143,78 +149,89 @@ class ParentHomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildChildCard() {
-    return Container(
-      height: 151,
-      width: 164,
-      decoration: BoxDecoration(
-        color: Color(0xFF182243),
-        borderRadius: BorderRadius.circular(21),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset('assets/user.png', height: 50, width: 50),
-          SizedBox(height: 10),
-          Text(
-            'Ahmed',
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-          SizedBox(height: 5),
-          Text(
-            'Level 2',
-            style: TextStyle(color: Colors.white, fontSize: 14),
-          ),
-        ],
+  Widget _buildChildCard(BuildContext context, ) {
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => StudentCoursePage()));
+      },
+      child: Container(
+        height: 80,
+        width: 164,
+        decoration: BoxDecoration(
+          color: Color(0xFF182243),
+          borderRadius: BorderRadius.circular(21),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('assets/user.png', height: 50, width: 50),
+            SizedBox(height: 10),
+            Text(
+              'Ahmed',
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+            SizedBox(height: 5),
+            Text(
+              'Level 2',
+              style: TextStyle(color: Colors.white, fontSize: 14),
+            ),
+          ],
+        ),
       ),
     );
   }
-  Widget _buildListCard() {
-    return Container(
-      margin: EdgeInsets.only(bottom: 10),
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Color(0xFFF6F6F6),
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            offset: Offset(0, 4),
-            blurRadius: 4,
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'MR: Adel',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text('Science Teacher Ahmed'),
-              ],
+  Widget _buildListCard(BuildContext context) {
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage()));
+
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 10),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Color(0xFFF6F6F6),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              offset: Offset(0, 4),
+              blurRadius: 4,
             ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Message',
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    fontWeight: FontWeight.bold,
+          ],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'MR: Adel',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                ),
-                Text('Management Education Services'),
-                Text('Buses At Your Home'),
-              ],
+                  Text('Science Teacher Ahmed'),
+                ],
+              ),
             ),
-          ),
-        ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Message',
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text('Management Education Services'),
+                  Text('Buses At Your Home'),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
