@@ -36,6 +36,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       height: 60,
@@ -53,6 +54,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         controller: widget.controller,
         obscureText: widget.isPassword ? _obscureText : false,
         decoration: InputDecoration(
+          hintStyle: TextStyle(color: Colors.grey),
           hintText: widget.hintText,
           border: InputBorder.none,
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -133,6 +135,7 @@ class _DropdownTextFormFieldState extends State<DropdownTextFormField> {
           child: TextField(
             controller: widget.controller,
             decoration: InputDecoration(
+hintStyle: TextStyle(color: Colors.grey),
               hintText: widget.hintText,
               border: InputBorder.none,
               contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -260,6 +263,7 @@ class _BirthDateFieldState extends State<BirthDateField> {
                 });
               },
               decoration: InputDecoration(
+                hintStyle: TextStyle(color: Colors.grey),
                 border: InputBorder.none,
               ),
             ),

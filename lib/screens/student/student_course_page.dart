@@ -207,6 +207,10 @@ class TrackingPage extends StatelessWidget {
 }
 
 class SubjectsGrid extends StatelessWidget {
+  final int? itemCount;
+
+  SubjectsGrid({this.itemCount}); // Optional parameter for item count
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -218,12 +222,14 @@ class SubjectsGrid extends StatelessWidget {
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
-        itemCount: subjects.length,
+        itemCount: itemCount ?? subjects.length, // If itemCount is null, show the entire list
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => StudentSubjectChapter()));
-
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => StudentSubjectChapter()));
             },
             child: GridTile(
               child: Column(

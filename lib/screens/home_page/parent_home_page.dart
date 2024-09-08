@@ -11,6 +11,8 @@ class ParentHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       floatingActionButton: GestureDetector(
         onTap: (){
@@ -83,7 +85,7 @@ class ParentHomePage extends StatelessWidget {
                 child: Text(
                   'MY Children',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: isDarkMode? Colors.white: Color(0xff130F44),
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
@@ -113,7 +115,7 @@ class ParentHomePage extends StatelessWidget {
                 child: Text(
                   'Latest Noticies',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: isDarkMode? Colors.white: Color(0xff130F44),
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
@@ -181,6 +183,8 @@ class ParentHomePage extends StatelessWidget {
     );
   }
   Widget _buildListCard(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage()));
@@ -208,9 +212,9 @@ class ParentHomePage extends StatelessWidget {
                 children: [
                   Text(
                     'MR: Adel',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold,color: isDarkMode? Colors.white: Color(0xff130F44)),
                   ),
-                  Text('Science Teacher Ahmed'),
+                  Text('Science Teacher Ahmed',style: TextStyle(color:isDarkMode? Colors.white: Color(0xff130F44) ),),
                 ],
               ),
             ),
@@ -223,9 +227,10 @@ class ParentHomePage extends StatelessWidget {
                     style: TextStyle(
                       decoration: TextDecoration.underline,
                       fontWeight: FontWeight.bold,
+                      color: isDarkMode? Colors.white: Color(0xff130F44)
                     ),
                   ),
-                  Text('Management Education Services'),
+                  Text('Management Education Services',style: TextStyle(color: isDarkMode? Colors.white: Color(0xff130F44)),),
                   Text('Buses At Your Home'),
                 ],
               ),
