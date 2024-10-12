@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:task/components/default_appbar.dart';
 import 'package:task/components/default_textform_field.dart';
@@ -12,7 +14,22 @@ import '../../components/default_buttom.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
-
+  Future<String?> getParentId() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        // Assuming the user's document ID matches the Firebase Auth user UID
+        DocumentSnapshot doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+        return doc.id; // This will be the parentId
+      }
+    } catch (e) {
+      print('Error retrieving parentId: $e');
+    }
+    return null;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +72,23 @@ class ProfilePage extends StatelessWidget {
           )),
     DefaultListTile(onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context)=>AddressPage() ));}, icon: Icons.person, title: "Address"),
           DefaultListTile(icon:Icons.supervisor_account_sharp , title: "Childern", onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context)=>ChildernPage() ));},),
-          DefaultListTile(onTap:  (){ Navigator.push(context, MaterialPageRoute(builder: (context)=>MyCartPage())); ;}, icon: Icons.shopping_cart, title: "Cart"),
+          DefaultListTile(onTap:  ()async{             String? parentId = await getParentId(); // Fetch parentId
+
+          if (parentId != null) {
+            // Navigate to MyCartPage and pass parentId
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MyCartPage(parentId: parentId),
+              ),
+            );
+          } else {
+            // Handle case where parentId is null (e.g., show an error message)
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to retrieve parentId')),
+            );
+          }
+          ;}, icon: Icons.shopping_cart, title: "Cart"),
 DefaultListTile(onTap: (){
   showModalBottomSheet(
     context: context,

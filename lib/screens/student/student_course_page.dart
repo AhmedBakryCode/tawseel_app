@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:task/components/custom_item_menu.dart';
@@ -14,8 +13,8 @@ import 'package:task/screens/student/driver_details_page.dart';
 import '../student_sunject/student_subject_page.dart';
 
 class StudentCoursePage extends StatefulWidget {
-  const StudentCoursePage({Key? key}) : super(key: key);
-
+  const StudentCoursePage({Key? key, required this.studentId}) : super(key: key);
+final String studentId;
   @override
   State<StudentCoursePage> createState() => _StudentCoursePageState();
 }
@@ -143,9 +142,9 @@ class _StudentCoursePageState extends State<StudentCoursePage> {
                         children: [
                           _buildMenuItem(icon:Icons.people, title: 'Teachers',ontap: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherPage())); }),
                           _buildMenuItem(icon:Icons.visibility_outlined, title: 'Attendance',ontap:(){Navigator.push(context, MaterialPageRoute(builder: (context)=>AttendanceScreen())); } ),
-                          _buildMenuItem(icon: Icons.book_outlined, title: 'Assignments',ontap: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>AssignmentsPage())); }),
+                          _buildMenuItem(icon: Icons.book_outlined, title: 'Assignments',ontap: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>AssignmentsPage(studentId: widget.studentId,))); }),
                           _buildMenuItem(icon: Icons.alarm, title: 'Time Table',ontap: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>TimetableScreen())); }),
-                          _buildMenuItem(icon:Icons.edit,title: 'Exams',ontap: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>ExamPage())); }),
+                          _buildMenuItem(icon:Icons.edit,title: 'Exams',ontap: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>ExamPage(studentId: widget.studentId,))); }),
                           _buildMenuItem(icon:Icons.print,title: 'Result',ontap: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>ResultPage())); }),
                         ],
                       ),

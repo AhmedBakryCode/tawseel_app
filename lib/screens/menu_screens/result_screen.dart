@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:task/models/result_model.dart';
 import 'package:task/components/default_appbar.dart';
 
 class ResultPage extends StatelessWidget {
@@ -6,33 +8,55 @@ class ResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int result =7;
     return Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-              children: [
-                CustomAppBar(
-                  centerWidget: Text(
-                    "Exam",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            CustomAppBar(
+              centerWidget: Text(
+                "Results",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30,
+                  fontWeight: FontWeight.w700,
                 ),
-                SizedBox(height: 20,),
-                ListView.builder(shrinkWrap: true,itemCount: 2,physics: NeverScrollableScrollPhysics(),itemBuilder: (context,index)=> ResultCardList())
-               ,SizedBox(height: 20,)
-                , Container(height: MediaQuery.of(context).size.height*0.1,width: MediaQuery.of(context).size.width*0.75,decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: result<=5? Colors.red: Colors.green),child: Center(child: Text(result<=5?"failed": "Passed",style: TextStyle(fontSize: 20,color: Colors.white),),),),
-SizedBox(height: 20,)
-              ]),
-        ));
-  }}
+              ),
+            ),
+            SizedBox(height: 20),
+            StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance.collection('users').doc('userId').collection('results').snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                final results = snapshot.data!.docs
+                    .map((doc) => Result.fromDocument(doc))
+                    .toList();
+
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: results.length,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) => ResultCardList(result: results[index]),
+                );
+              },
+            ),
+            SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class ResultCardList extends StatelessWidget {
+  final Result result;
+
   const ResultCardList({
-  super.key,
-  });
+    required this.result,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,16 +80,16 @@ class ResultCardList extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(width: 10),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-
                 Text(
-                  'Exam Name',
-                  style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),
+                  result.examName, // Display exam name
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                 ),
                 Text(
-                  '22-02-2024',
-                  style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),
+                  result.date, // Display exam date
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                 ),
               ],
             ),
@@ -74,15 +98,16 @@ class ResultCardList extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Mid Term Math',
+                  result.type, // Display type of the exam
                   style: TextStyle(color: Colors.black, fontSize: 15),
                 ),
                 Text(
-                  'Pass',
-                  style: TextStyle(fontWeight: FontWeight.bold,fontSize: 10),
+                  result.state == 'Passed' ? 'Pass' : 'Fail', // Display Pass/Fail
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
                 ),
               ],
-            ),Row(
+            ),
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
@@ -90,12 +115,24 @@ class ResultCardList extends StatelessWidget {
                   style: TextStyle(color: Colors.black, fontSize: 15),
                 ),
                 Text(
-                  '90%',
-                  style: TextStyle(fontWeight: FontWeight.bold,fontSize: 10),
+                  '${result.grade}', // Display grade
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
                 ),
               ],
             ),
-
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Percentage',
+                  style: TextStyle(color: Colors.black, fontSize: 15),
+                ),
+                Text(
+                  '${result.percentage}%', // Display percentage
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
+                ),
+              ],
+            ),
           ],
         ),
       ),

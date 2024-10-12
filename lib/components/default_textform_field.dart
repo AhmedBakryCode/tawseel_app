@@ -4,7 +4,7 @@ class CustomTextFormField extends StatefulWidget {
   final bool isPassword;
   final TextEditingController controller;
   final String hintText;
-  final String? Function(String)? validator; // Add a validator function
+  final String? Function(String?)? validator; // Add a validator function
 
   CustomTextFormField({
     required this.isPassword,
@@ -50,7 +50,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           ),
         ],
       ),
-      child: TextField(
+      child: TextFormField(
+        validator: widget.validator,
         controller: widget.controller,
         obscureText: widget.isPassword ? _obscureText : false,
         decoration: InputDecoration(

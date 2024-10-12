@@ -14,7 +14,7 @@ class PaymentSuccess extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(height: 200,),
+               const SizedBox(height: 200,),
                 Image.asset("assets/bags.png",height: MediaQuery.of(context).size.height*0.4,width: MediaQuery.of(context).size.width*0.8,),
                const Text("SUCCESS",style: TextStyle(fontSize: 34,fontWeight: FontWeight.w700),),
                const Text("Your Order Will Come To you soon ",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400),),
@@ -23,7 +23,7 @@ class PaymentSuccess extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 30,),
-          CustomButton(text: "CONTINUE", onPressed: (){ Navigator.push(context, MaterialPageRoute(builder: (context)=>ParentHomePage()  ));})
+          CustomButton(text: "CONTINUE", onPressed: (){ Navigator.pop(context);})
         ],
       ),
     );

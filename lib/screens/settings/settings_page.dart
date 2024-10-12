@@ -6,6 +6,7 @@ import 'package:task/screens/settings/add_childern_page.dart';
 import 'package:task/screens/settings/childern_page.dart';
 import 'package:task/screens/settings/payment_medthod.dart';
 import 'package:task/screens/settings/profile_page.dart';
+import 'package:task/services/auth_services.dart';
 
 import '../../main.dart';
 
@@ -46,7 +47,9 @@ class SettingsPage extends StatelessWidget {
           DefaultListTile(onTap: () {  }, icon: Icons.language, title: "Language"),
           DefaultListTile(onTap: () {  }, icon: Icons.privacy_tip, title: "Privacy"),
        DefaultListTile(onTap: () {  }, icon: Icons.call, title: "Contact Us"),
-     DefaultListTile(onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context)=> ParentLoginScreen())); }, icon: Icons.logout, title: "Log Out")
+     DefaultListTile(onTap: () { AuthService _auth=AuthService();
+     _auth.signOut();
+     }, icon: Icons.logout, title: "Log Out")
         ],
       ),
     );

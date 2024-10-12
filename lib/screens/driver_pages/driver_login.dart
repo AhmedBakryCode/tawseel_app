@@ -1,57 +1,42 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:task/components/default_buttom.dart';
 import 'package:task/components/default_textform_field.dart';
+import 'package:task/screens/driver_pages/driver_home_page.dart';
 import 'package:task/screens/forget_password/forget_password_page.dart';
 import 'package:task/screens/home_page/parent_home_page.dart';
 import 'package:task/screens/login/student_login_screen.dart';
 import 'package:task/screens/register_page/sign_up_page.dart';
 import 'package:task/services/auth_services.dart';
 
-class ParentLoginScreen extends StatefulWidget {
-  const ParentLoginScreen({Key? key}) : super(key: key);
+class DriverLoginScreen extends StatefulWidget {
+  const DriverLoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<ParentLoginScreen> createState() => _ParentLoginScreenState();
+  State<DriverLoginScreen> createState() => _ParentLoginScreenState();
 }
 
-class _ParentLoginScreenState extends State<ParentLoginScreen> {
+class _ParentLoginScreenState extends State<DriverLoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final AuthService _authServices = AuthService();
-
-  void _submitForm() async {
+  final AuthService _authServices =AuthService();
+  void _submitForm() async{
     if (_formKey.currentState!.validate()) {
-      try {
-        // Use the AuthService to log in the user and get the user object
-        UserCredential userCredential = await _authServices.loginUser(
-          emailController.text.trim(),
-          passwordController.text.trim(),
-        );
+      await _authServices.loginUser(emailController.toString(), passwordController.toString());
 
-        // Get the user ID from the UserCredential
-        String userId = userCredential.user!.uid;
-
-        // Navigate to ParentHomePage with the userId parameter
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ParentHomePage( parendId: userId,),
-          ),
-        );
-      } catch (error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login failed: ${error.toString()}')),
-        );
-      }
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => DriverHomePage()),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please fix the errors in red')),
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -126,8 +111,7 @@ class _ParentLoginScreenState extends State<ParentLoginScreen> {
                   if (!RegExp(r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$').hasMatch(value))
                     return 'Enter a valid email address';
                   return null;
-                },
-                isPassword: false,
+                }, isPassword: false,
               ),
               SizedBox(height: 10),
               CustomTextFormField(
@@ -150,7 +134,6 @@ class _ParentLoginScreenState extends State<ParentLoginScreen> {
                 onPressed: _submitForm,
               ),
               SizedBox(height: 10),
-              _buildSwitchLoginOption(context),
               SizedBox(height: 20),
               Text(
                 'Management Education Serves And Buses At Your Home',
@@ -181,43 +164,9 @@ class _ParentLoginScreenState extends State<ParentLoginScreen> {
           ),
         ),
         SizedBox(height: 10),
-        TextButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SignUpPage()),
-            );
-          },
-          child: Text(
-            'You don\'t have an account?',
-            style: TextStyle(color: Colors.red),
-          ),
-        ),
       ],
     );
   }
 
-  Widget _buildSwitchLoginOption(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "Login as Student ",
-          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => StudentLoginScreen()),
-            );
-          },
-          child: Text(
-            "Student",
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ],
-    );
-  }
+
 }

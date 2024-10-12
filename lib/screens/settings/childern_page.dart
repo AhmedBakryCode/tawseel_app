@@ -1,37 +1,74 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:task/components/default_appbar.dart';
+import 'package:task/models/child_model.dart';
 
 class ChildernPage extends StatelessWidget {
   const ChildernPage({Key? key}) : super(key: key);
 
+  Future<List<Child>> fetchChildren() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc('parentID') // Replace with actual parent ID
+        .collection('children')
+        .get();
+
+    return snapshot.docs.map((doc) => Child.fromFirestore(doc.data())).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CustomAppBar(centerWidget: Text("Childerns",style: TextStyle(
-            color: Colors.white, fontSize: 30, fontWeight: FontWeight.w700),
-        )),
-            ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),itemCount: 6,itemBuilder: (context, index)=>CardListItem() )
-          ],
-        ),
+      body: FutureBuilder<List<Child>>(
+        future: fetchChildren(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error loading data'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No children found'));
+          }
+
+          final children = snapshot.data!;
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                CustomAppBar(
+                  centerWidget: Text(
+                    "Children",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w700),
+                  ),
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: children.length,
+                  itemBuilder: (context, index) =>
+                      CardListItem(child: children[index]),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
 }
 class CardListItem extends StatelessWidget {
-  const CardListItem({Key? key}) : super(key: key);
+  final Child child;
+
+  const CardListItem({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return                 Container(
-
+    return Container(
       margin: EdgeInsets.only(bottom: 10),
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
-
         color: Color(0xFFF6F6F6),
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
@@ -46,7 +83,6 @@ class CardListItem extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -58,7 +94,7 @@ class CardListItem extends StatelessWidget {
                 ),
                 SizedBox(width: 10),
                 Text(
-                  'MR: Mohamed',
+                  'Name: ${child.name}',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
@@ -68,17 +104,24 @@ class CardListItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Level: First',
+                  'Level: ${child.level}',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(width: 10),
-                Text('ID: 5485355'), // Replace with actual telephone number
+                Text('Phone: ${child.phone}'),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Gender: ${child.gender}'),
+                Text('Birth Date: ${child.birthDate}'),
               ],
             ),
           ],
         ),
       ),
-    )
-    ;
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task/screens/student_sunject/video_show_page.dart';
 
 import '../../components/default_appbar.dart';
 
@@ -152,49 +153,53 @@ class FilesTabBar extends StatelessWidget {
 class VideosTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return   ListView.builder(itemCount: 6,itemBuilder: (context,index)=>   Container(
-      margin: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.white, // Background color of the card
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3), // shadow direction: bottom right
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Text section
-          Expanded(
-            child: Text(
-              'Basic Of Science Ch 1',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16, // Adjusted font size for better appearance
+    return   ListView.builder(itemCount: 6,itemBuilder: (context,index)=>
+        GestureDetector(
+          onTap: (){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>VideoShowDetails()));},
+          child: Container(
+                margin: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white, // Background color of the card
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3), // shadow direction: bottom right
+            ),
+          ],
+                ),
+                child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Text section
+            Expanded(
+              child: Text(
+                'Basic Of Science Ch 1',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16, // Adjusted font size for better appearance
+                ),
               ),
             ),
-          ),
-          // Image section
-          Container(
-            height: 60, // Adjusted height to match the example
-            width: 100, // Adjusted width to match the example
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              image: DecorationImage(
-                image: AssetImage("assets/Rectangle 26.png"),
-                fit: BoxFit.cover, // Ensures the image fits properly
+            // Image section
+            Container(
+              height: 60, // Adjusted height to match the example
+              width: 100, // Adjusted width to match the example
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                image: DecorationImage(
+                  image: AssetImage("assets/Rectangle 26.png"),
+                  fit: BoxFit.cover, // Ensures the image fits properly
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    ),
+          ],
+                ),
+              ),
+        ),
     
     );
   }

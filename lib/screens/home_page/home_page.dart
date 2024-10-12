@@ -1,30 +1,47 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:task/screens/chats/chat_screen.dart';
 import 'package:task/screens/chats/users_list_pge.dart';
 import 'package:task/screens/settings/childern_setting.dart';
-import 'package:task/screens/settings/settings_page.dart';
 import 'package:task/screens/student/student_course_page.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:task/models/teacher_model.dart';
 import '../../components/default_appbar.dart';
 
 class StudentHomePage extends StatefulWidget {
-  const StudentHomePage({Key? key}) : super(key: key);
+  const StudentHomePage({Key? key, required this.studentId}) : super(key: key);
+
+  final String studentId;
 
   @override
   State<StudentHomePage> createState() => _StudentHomePageState();
 }
 
 class _StudentHomePageState extends State<StudentHomePage> {
+  User? _user; // Firebase user object
+  void _fetchUser() {
+    // Fetch the current authenticated user
+    setState(() {
+      _user = FirebaseAuth.instance.currentUser;
+    });
+  }
+
   bool _showAllSubjects = false; // Flag to show all subjects
   bool _showAllNotices = false; // Flag to show more notices
+@override
+  void initState() {
+  _fetchUser(); // Fetch the authenticated user when the widget is initialized
 
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       floatingActionButton: GestureDetector(
         onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => UsersListPage()));
+Navigator.push(context, MaterialPageRoute(builder: (context)=> UsersListPage()));
         },
         child: CircleAvatar(
           radius: 20,
@@ -53,19 +70,19 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Mohamed",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 20,
-                          ),
-                        ),
-                        Text(
-                          "mohamed@gmail.com",
+                          _user?.displayName ?? 'name', // Dynamic email display
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w700,
                             fontSize: 10,
+                          ),
+                        ),
+                        Text(
+                          _user?.email ?? 'guest@example.com', // Dynamic email display
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 20,
                           ),
                         ),
                       ],
@@ -73,15 +90,20 @@ class _StudentHomePageState extends State<StudentHomePage> {
                   ),
                   Spacer(flex: 1),
                   IconButton(
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => ChildernSettingsPage()));
-                      },
-                      icon: Icon(
-                        Icons.settings,
-                        color: Colors.white,
-                        size: 30,
-                      ))
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChildernSettingsPage(),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.settings,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                  )
                 ],
               ),
             ),
@@ -102,83 +124,51 @@ class _StudentHomePageState extends State<StudentHomePage> {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Subjects',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _showAllSubjects = !_showAllSubjects;
-                        });
-                      },
-                      child: Text(
-                        _showAllSubjects ? "Show less" : "View all",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  'Subjects',
+                  style: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-            SubjectsGrid(itemCount: _showAllSubjects ? subjects.length : 3),
+            // Implement your SubjectsGrid here
+            SizedBox(height: 20),
+            // Teachers List Section
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Available Teachers',
+                  style: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            _buildTeachersList(context),
             SizedBox(height: 20),
             // Latest Notices Section
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Latest Notices',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _showAllNotices = !_showAllNotices;
-                        });
-                      },
-                      child: Text(
-                        _showAllNotices ? "Show less" : "View all",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  'Latest Notices',
+                  style: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-            // ListView for cards
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                children: List.generate(
-                    _showAllNotices ? 10 : 3, (index) {
-                  return _buildListCard(context);
-                }),
-              ),
-            ),
+            // Implement your notices here
           ],
         ),
       ),
@@ -199,21 +189,68 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  Widget _buildListCard(BuildContext context) {
+  Widget _buildTeachersList(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseFirestore.instance.collection('users').id)
+          .collection('teachers')
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Text(
+            'No Teachers Available',
+            style: TextStyle(color: Colors.grey),
+          );
+        }
+
+        var teachers = snapshot.data!.docs
+            .map((doc) =>
+            TeacherModel.fromMap(doc.data() as Map<String, dynamic>))
+            .toList();
+
+        return ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: teachers.length,
+          itemBuilder: (context, index) {
+            return _buildTeacherCard(context, teachers[index]);
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildTeacherCard(BuildContext context, TeacherModel teacher) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => ChatPage()));
+        // Navigate to ChatPage with the selected teacher
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatPage(
+              teacher: teacher,
+            ),
+          ),
+        );
       },
       child: Container(
-        margin: EdgeInsets.only(bottom: 10),
+        margin: EdgeInsets.only(bottom: 10, left: 16, right: 16),
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Color(0xFFF6F6F6),
+          color: isDarkMode ? Colors.grey[800] : Color(0xFFF6F6F6),
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: isDarkMode
+                  ? Colors.black.withOpacity(0.1)
+                  : Colors.black.withOpacity(0.1),
               offset: Offset(0, 4),
               blurRadius: 4,
             ),
@@ -221,33 +258,52 @@ class _StudentHomePageState extends State<StudentHomePage> {
         ),
         child: Row(
           children: [
+            CircleAvatar(
+              backgroundColor: Color(0xff182243),
+              radius: 30,
+              child: Image.asset("assets/user.png"),
+            ),
+            SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'MR: Adel',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    'MR: ${teacher.teacherName}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: isDarkMode ? Colors.white : Colors.black,
+                    ),
                   ),
-                  Text('Science Teacher Ahmed'),
+                  Text(
+                    'Subject: ${teacher.subjectName}',
+                    style: TextStyle(
+                      color: isDarkMode ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  Text(
+                    'Phone: ${teacher.mobilePhone}',
+                    style: TextStyle(
+                      color: isDarkMode ? Colors.white : Colors.black,
+                    ),
+                  ),
                 ],
               ),
             ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Message',
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.bold,
+            IconButton(
+              icon: Icon(Icons.chat),
+              color: Color(0xff182243),
+              onPressed: () {
+                // Navigate to ChatPage with the selected teacher
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChatPage(
+                      teacher: teacher,
                     ),
                   ),
-                  Text('Management Education Services'),
-                  Text('Buses At Your Home'),
-                ],
-              ),
+                );
+              },
             ),
           ],
         ),
